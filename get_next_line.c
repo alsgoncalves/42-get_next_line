@@ -26,40 +26,42 @@ char	*read_lines(int fd)
 	return (read_lines);
 }
 
-int get_next_line(int fd, char **line) 
+int get_next_line(int fd, char **line)
 {
 	static char *storage;
 	char *line_len;
 	char *temporary;
 	char *lines_read;
-	
+
 	// if (*line != NULL)
 	// {
 	// 	free(*line);
 	// 	*line = NULL;
 	// }
-	
+
 	if (storage <= 0)
 		storage = ft_strdup(read_lines(fd));
 	if (check_for_new_line(storage) == 1)
-	{	
+	{
 		line_len = ft_strchr(storage, '\n');
 		*line = ft_substr(storage, 0, (ft_strlen(storage) - ft_strlen(line_len)));
 		storage = ft_substr(line_len, 1, ft_strlen(line_len) - 1);
 		//free(*line);
 		return (1);
 	}
-	else 
+	else
 	{
 		while(check_for_new_line(storage) == 0)
 		{
 			lines_read = read_lines(fd);
+      if (lines_read == 0)
+        return (0);
 			temporary = ft_strjoin(storage, lines_read);
 			free(storage);
 			storage = temporary;
 		}
 		if (check_for_new_line(storage) == 1)
-		{	
+		{
 			line_len = ft_strchr(storage, '\n');
 			*line = ft_substr(storage, 0, (ft_strlen(storage) - ft_strlen(line_len)));
 			storage = ft_substr(line_len, 1, ft_strlen(line_len) - 1);
@@ -70,22 +72,22 @@ int get_next_line(int fd, char **line)
 	return 0;
 }
 
-int main () 
-{
-	int fd;
-	char *line;
-	
-	fd = open("file.txt" , O_RDONLY);
-	if(fd == -1)
-	{
-		printf("Error opening file");
-		return (-1);
-	}
-	while (get_next_line(fd, &line))
-	{
-		printf("%s\n", line);
-		free(line);
-	}
-	close(fd);
-	return(0);
-}
+// int main ()
+// {
+// 	int fd;
+// 	char *line;
+
+// 	fd = open("file.txt" , O_RDONLY);
+// 	if(fd == -1)
+// 	{
+// 		printf("Error opening file");
+// 		return (-1);
+// 	}
+// 	while (get_next_line(fd, &line))
+// 	{
+// 		printf("%s\n", line);
+// 		free(line);
+// 	}
+// 	close(fd);
+// 	return(0);
+// }
