@@ -10,69 +10,6 @@ size_t		ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
-{
-	size_t i;
-	size_t j;
-	size_t catch;
-
-	i = 0;
-	j = 0;
-	catch = 0;
-	if (*needle == 0)
-		return ((char *)haystack);
-	while (haystack[i] && i < len)
-	{
-		while (needle[j] && haystack[i] == needle[j])
-		{
-			catch++;
-			i++;
-			j++;
-		}
-		if (j == ft_strlen(needle))
-			return ((char *)haystack + (i - catch));
-		i++;
-	}
-	return (NULL);
-}
-
-int		is_char_set(char c, const char *set)
-{
-	while (*set)
-	{
-		if (c == *set)
-			return (1);
-		set++;
-	}
-	return (0);
-}
-
-char	*ft_strtrim(char const *s1, char const *set)
-{
-	size_t	start;
-	size_t	end;
-	size_t	i;
-	char	*trimmed_str;
-
-	start = 0;
-	end = ft_strlen(s1);
-	while (is_char_set(s1[start], set) && s1[start])
-		start++;
-	while (is_char_set(s1[end - 1], set) && end > start)
-		end--;
-	trimmed_str = (char *)malloc(sizeof(*s1) * (end - start + 1));
-	if (trimmed_str == NULL)
-		return (NULL);
-	i = 0;
-	while (start < end)
-	{
-		trimmed_str[i] = s1[start];
-		start++;
-		i++;
-	}
-	trimmed_str[i] = '\0';
-	return (trimmed_str);
-}
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -130,10 +67,33 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (substring);
 }
 
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined_str;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	joined_str = (char *)malloc((strlen(s1) + strlen(s2) + 1));
+	if (joined_str == NULL)
+		return (NULL);
+	while (s1[i])
+	{
+		joined_str[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+	{
+		joined_str[i + j] = s2[j];
+		j++;
+	}
+	joined_str[i + j] = '\0';
+	return (joined_str);
+}
+
 // int main()
 // {
-//     char *str;
-//     str = "We are in 2021. And this year is going to be great and \n we are going\n to see our dreams come to live. It might \n";
-//     printf("%s\n", ft_strchr(str, '\n'));
+//     printf("%s\n", ft_strjoin("", 0));
 //     return 0;
 // }
