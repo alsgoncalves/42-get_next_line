@@ -32,21 +32,25 @@ int get_next_line(int fd, char **line)
 	char *line_len;
 	char *temporary;
 	char *lines_read;
+	temporary = 0;
 
-	// if (*line != NULL)
-	// {
-	// 	free(*line);
-	// 	*line = NULL;
-	// }
+	if (read(fd, 0, 0) == -1 || !line || BUFFER_SIZE < 1)
+		return (-1);
 
 	if (storage <= 0)
 		storage = ft_strdup(read_lines(fd));
+	if (storage == 0)
+	{
+		storage = ft_strdup(read_lines(fd));
+		return (0);
+	}
 	if (check_for_new_line(storage) == 1)
 	{
 		line_len = ft_strchr(storage, '\n');
-		*line = ft_substr(storage, 0, (ft_strlen(storage) - ft_strlen(line_len)));
-		storage = ft_substr(line_len, 1, ft_strlen(line_len) - 1);
-		//free(*line);
+		*line = ft_substr(storage, 0, (ft_strlen(storage) - ft_strlen(line_len) - 1));
+		if (temporary)
+			free(temporary);
+		storage = ft_substr(line_len, 0, ft_strlen(line_len));
 		return (1);
 	}
 	else
@@ -54,18 +58,26 @@ int get_next_line(int fd, char **line)
 		while(check_for_new_line(storage) == 0)
 		{
 			lines_read = read_lines(fd);
-      if (lines_read == 0)
-        return (0);
+			if (lines_read == 0)
+			{
+				*line = ft_strdup(storage);
+				free(storage);
+				storage = 0;
+				return (1);
+			}
 			temporary = ft_strjoin(storage, lines_read);
+			free(lines_read);
 			free(storage);
 			storage = temporary;
+
 		}
 		if (check_for_new_line(storage) == 1)
 		{
 			line_len = ft_strchr(storage, '\n');
-			*line = ft_substr(storage, 0, (ft_strlen(storage) - ft_strlen(line_len)));
-			storage = ft_substr(line_len, 1, ft_strlen(line_len) - 1);
-			//free(*line);
+			*line = ft_substr(storage, 0, (ft_strlen(storage) - ft_strlen(line_len) - 1));
+			if (temporary)
+				free(temporary);
+			storage = ft_substr(line_len, 0, ft_strlen(line_len));
 			return (1);
 		}
 	}
@@ -88,6 +100,12 @@ int get_next_line(int fd, char **line)
 // 		printf("%s\n", line);
 // 		free(line);
 // 	}
+// 	// get_next_line(fd, &line);
+// 	// printf("LINE IN MAIN : %s\n", line);
+// 	// free(line);
+// 	// get_next_line(fd, &line);
+// 	// printf("LINE IN MAIN :%s\n", line);
+// 	// free(line);
 // 	close(fd);
 // 	return(0);
 // }

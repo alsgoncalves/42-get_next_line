@@ -16,11 +16,11 @@ char	*ft_strchr(const char *s, int c)
 	while (*s != 0)
 	{
 		if (*s == (unsigned char)c)
-			return ((char *)s++);
+			return ((char *)(s + 1));
 		s++;
 	}
 	if (c == '\0' && *s == '\0')
-		return ((char *)s++);
+		return ((char *)(s + 1));
 	return (NULL);
 }
 
@@ -30,6 +30,8 @@ char	*ft_strdup(char *src)
 	char	*duplicate;
 
 	i = 0;
+	if (!src)
+		return (0);
 	duplicate = (char*)malloc((ft_strlen(src) + 1) * sizeof(char));
 	if (duplicate == NULL)
 		return (0);
@@ -94,6 +96,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 // int main()
 // {
-//     printf("%s\n", ft_strjoin("", 0));
+// 	char *s1;
+// 	s1 = "Hello ctruck.";
+//     printf("%s\n", ft_strchr(s1, 'c'));
 //     return 0;
 // }
