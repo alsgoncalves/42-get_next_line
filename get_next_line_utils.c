@@ -77,6 +77,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	j = 0;
+	if (!(s1))
+		return (ft_strdup((char *)s2));
 	joined_str = (char *)malloc((strlen(s1) + strlen(s2) + 1));
 	if (joined_str == NULL)
 		return (NULL);
@@ -94,10 +96,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (joined_str);
 }
 
+
 // int main()
 // {
 // 	char *s1;
-// 	s1 = "Hello ctruck.";
-//     printf("%s\n", ft_strchr(s1, 'c'));
+// 	s1 = "HELLO";
+//     printf("%s\n", ft_strjoin("", s1));
 //     return 0;
 // }
