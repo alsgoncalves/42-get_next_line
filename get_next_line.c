@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: asobreir <asobreir@42lisboa.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/03/08 15:13:46 by asobreir          #+#    #+#             */
+/*   Updated: 2021/03/08 15:13:53 by asobreir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 int		save_line(char **storage, char **line)
 {
-	char *temporary;
-	int len;
+	char	*temporary;
+	int		len;
 
 	len = 0;
 	while ((*storage)[len] != '\0' && (*storage)[len] != '\n')
@@ -16,12 +28,12 @@ int		save_line(char **storage, char **line)
 		*storage = temporary;
 		return (1);
 	}
-	else 
-		return 0;
+	else
+		return (0);
 }
 
-void		store_and_print(char **storage, char *buffer)
-{ 
+void	update_storage(char **storage, char *buffer)
+{
 	char *temporary;
 
 	temporary = 0;
@@ -35,25 +47,23 @@ void		store_and_print(char **storage, char *buffer)
 	}
 }
 
-int get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line)
 {
-	static char *storage[1024];
-	size_t bytes_read;
-	char buffer[BUFFER_SIZE + 1];
-	
+	static char	*storage[1024];
+	size_t		bytes_read;
+	char		buffer[BUFFER_SIZE + 1];
+
 	if (read(fd, 0, 0) == -1 || !line || BUFFER_SIZE < 1 || fd < 0)
 		return (-1);
-	
 	if (storage[fd] && save_line(&storage[fd], line))
 		return (1);
-
 	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
-	{	
+	{
 		buffer[bytes_read] = '\0';
-		store_and_print(&storage[fd], buffer);
+		update_storage(&storage[fd], buffer);
 		if (save_line(&storage[fd], line))
 			return (1);
-	}	
+	}
 	if (storage[fd] && !ft_strchr(storage[fd], '\n'))
 	{
 		*line = ft_strdup(storage[fd]);
@@ -63,26 +73,5 @@ int get_next_line(int fd, char **line)
 	}
 	if ((bytes_read = read(fd, buffer, BUFFER_SIZE)) == 0 && !(storage[fd]))
 		*line = ft_strdup("");
-	return 0;
+	return (0);
 }
-
-// int main ()
-// {
-// 	int fd;
-// 	char *line;
-// 	//size_t bytes_read;
-
-// 	fd = open("gnlTester/files/alternate_line_nl_no_nl" , O_RDONLY);
-// 	if(fd == -1)
-// 	{
-// 		printf("Error opening file");
-// 		return (-1);
-// 	}
-// 	while (get_next_line(fd, &line))
-// 	{
-// 		printf("LINE: %s\n", line);
-// 		free(line);
-// 	}
-// 	close(fd);
-// 	return(0);
-// }
